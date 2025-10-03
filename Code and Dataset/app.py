@@ -3,21 +3,16 @@ import pickle
 import pandas as pd
 import numpy as np
 
-# Load the trained model
 with open('personality_model.pkl', 'rb') as f:
     model = pickle.load(f)
-
-# Load feature columns
 with open('feature_columns.pkl', 'rb') as f:
     feature_columns = pickle.load(f)
 
-# Personality mapping
+#mapping
 personality_map = {0: 'Introvert', 1: 'Extrovert', 2: 'Ambivert'}
-
 st.title("🧠 Personality Type Predictor")
 st.write("Answer these questions to discover your personality type!")
 
-# Create input fields for each feature
 inputs = {}
 col1, col2 = st.columns(2)
 
@@ -45,7 +40,6 @@ with col2:
     inputs['planning'] = st.slider("Planning (0-10)", 0.0, 10.0, 5.0)
     inputs['spontaneity'] = st.slider("Spontaneity (0-10)", 0.0, 10.0, 5.0)
 
-# Additional features
 inputs['adventurousness'] = st.slider("Adventurousness (0-10)", 0.0, 10.0, 5.0)
 inputs['reading_habit'] = st.slider("Reading Habit (0-10)", 0.0, 10.0, 5.0)
 inputs['sports_interest'] = st.slider("Sports Interest (0-10)", 0.0, 10.0, 5.0)
@@ -57,13 +51,10 @@ inputs['decision_speed'] = st.slider("Decision Speed (0-10)", 0.0, 10.0, 5.0)
 inputs['stress_handling'] = st.slider("Stress Handling (0-10)", 0.0, 10.0, 5.0)
 
 if st.button("Predict Personality Type"):
-    # Create input dataframe
+
     input_df = pd.DataFrame([inputs])
-    
-    # Ensure columns are in correct order
     input_df = input_df[feature_columns]
     
-    # Make prediction
     prediction = model.predict(input_df)
     probability = model.predict_proba(input_df)
     
@@ -72,8 +63,7 @@ if st.button("Predict Personality Type"):
     
     st.success(f"### Your predicted personality type: **{personality}**")
     st.info(f"Confidence: {confidence:.2f}%")
-    
-    # Show personality description
+
     if personality == 'Introvert':
         st.write("""
         **Introvert Traits:**
@@ -97,4 +87,5 @@ if st.button("Predict Personality Type"):
         - Adaptable to different social situations
         - Enjoy both social time and alone time
         - Flexible in communication style
+
         """)
